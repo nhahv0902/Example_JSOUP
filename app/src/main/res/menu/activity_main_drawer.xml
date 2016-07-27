@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/nav_music"
+            android:icon="@drawable/ic_library_music_black_48dp"
+            android:title="@string/music" />
+        <item
+            android:id="@+id/nav_album"
+            android:icon="@drawable/ic_album_black_48dp"
+            android:title="@string/album" />
+        <item
+            android:id="@+id/nav_video"
+            android:icon="@drawable/ic_video_library_black_48dp"
+            android:title="@string/video" />
+    </group>
+
+    <item android:title="@string/charts">
+        <menu>
+            <item
+                android:id="@+id/nav_vi"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/vietnam" />
+            <item
+                android:id="@+id/nav_us_uk"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/us_uk" />
+            <item
+                android:id="@+id/nav_k_pop"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/k_pop" />
+        </menu>
+    </item>
+
+</menu>

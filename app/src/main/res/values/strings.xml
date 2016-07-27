@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Media Player</string>
+    <string name="name_music">Hạnh phúc nơi nào!</string>
+    <string name="name_artist">Hoàng Văn Nhã</string>
+    <string name="text_like">248,900</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="home">Trang chủ</string>
+    <string name="music">Bài hát</string>
+    <string name="album">Album</string>
+    <string name="video">Video</string>
+    <string name="charts">Bảng xếp hạng</string>
+    <string name="vietnam">Việt nam</string>
+    <string name="us_uk">US-UK</string>
+    <string name="k_pop">K-Pop</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
