@@ -41,7 +41,7 @@ public class SplashScreenActivity extends AppCompatActivity implements Runnable 
                 super.handleMessage(msg);
                 if (msg.what == HTML_PARSE) {
 
-                    SystemClock.sleep(200);
+                    SystemClock.sleep(100);
                     findViewById(R.id.progressBar).setVisibility(View.GONE);
                     startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
                     finish();

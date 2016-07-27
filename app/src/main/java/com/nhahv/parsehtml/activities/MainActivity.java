@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,20 +19,28 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.nhahv.parsehtml.R;
+import com.nhahv.parsehtml.app.MyApplication;
 import com.nhahv.parsehtml.fragments.AlbumFragment;
 import com.nhahv.parsehtml.fragments.MusicFragment;
+import com.nhahv.parsehtml.fragments.TopFragment;
 import com.nhahv.parsehtml.fragments.VideoFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = getClass().getSimpleName();
+    private int mPosition;
+
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        initViews();
 
 //        List<Video> videos = MyApplication.mRealm.getListVideo();
 //        for (Video video : videos) {
@@ -60,6 +70,11 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         startFragment(new AlbumFragment());
+        mPosition = 0;
+    }
+
+    private void initViews() {
+        
     }
 
     @Override
@@ -95,7 +110,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Fragment fragment = new MusicFragment();
+        Fragment fragment;
         switch (id) {
             case R.id.nav_home:
                 fragment = new AlbumFragment();
@@ -109,6 +124,15 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_video:
                 fragment = new VideoFragment();
                 break;
+            case R.id.nav_vi:
+                fragment = TopFragment.getInstances(MyApplication.TOP_VN);
+                break;
+            case R.id.nav_us_uk:
+                fragment = TopFragment.getInstances(MyApplication.TOP_US);
+                break;
+            case R.id.nav_k_pop:
+                fragment = TopFragment.getInstances(MyApplication.TOP_POP);
+                break;
             default:
                 fragment = new AlbumFragment();
                 break;
@@ -121,18 +145,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startFragment(Fragment fragment) {
-
-        String backStateName = fragment.getClass().getName();
-        String fragmentTag = backStateName;
         FragmentManager manager = getSupportFragmentManager();
-        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
-
-        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) {
-            FragmentTransaction ft = manager.beginTransaction();
-            ft.replace(R.id.content_main, fragment, fragmentTag);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.commit();
-        }
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.replace(R.id.content_main, fragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.commit();
     }
-
 }

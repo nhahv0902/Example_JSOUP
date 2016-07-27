@@ -6,6 +6,7 @@ import android.util.Log;
 import com.nhahv.parsehtml.app.MyApplication;
 import com.nhahv.parsehtml.realm.Album;
 import com.nhahv.parsehtml.realm.Music;
+import com.nhahv.parsehtml.realm.MusicTop;
 import com.nhahv.parsehtml.realm.Video;
 
 import org.jsoup.Jsoup;
@@ -26,6 +27,9 @@ public class HtmlParse extends AsyncTask<Void, Void, Void> {
     private static final String URL_ALBUM = "http://tainhacmp3.net/";
     private static final String URL_MUSIC = "http://tainhacmp3.net/mp3";
     private static final String URL_VIDEO = "http://tainhacmp3.net/video";
+    private static final String URL_TOP_VN = "http://tainhacmp3.net/album/Top100-Nhac-Tre/ZWZB969E";
+    private static final String URL_TOP_UK = "http://tainhacmp3.net/album/Top100-Pop/ZWZB96AB";
+    private static final String URL_TOP_POP = "http://tainhacmp3.net/album/Top100-Han-Quoc/ZWZB96DC";
     private final String TAG = getClass().getSimpleName();
     public static boolean isFinish = false;
 
@@ -172,7 +176,73 @@ public class HtmlParse extends AsyncTask<Void, Void, Void> {
                 MyApplication.mListVideo.clear();
                 MyApplication.mListVideo.addAll(mListVideo);
             }
-            isFinish = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void parseTop(String textSearch, int type) {
+        List<MusicTop> mListMusic = new ArrayList<>();
+        try {
+            Document dom = Jsoup.connect(textSearch).followRedirects(true).get();
+            Elements listSog = dom.select(".content>.play-album>.album-list-song>.list-item");
+            if (listSog == null) {
+                return;
+            }
+
+            int size = listSog.size();
+            Log.d(TAG, "HtmlParse " + size);
+            for (int i = 0; i < size; i++) {
+
+                // number
+                String number = listSog.get(i)
+                        .select(".item-number>.number")
+                        .first().text();
+
+                // name
+                String name = listSog.get(i)
+                        .select(".item-info>.item-name")
+                        .first().text();
+                //author
+                String author = listSog.get(i)
+                        .select(".item-info>.item-alias")
+                        .first().text();
+
+                // link downloads
+                String link = listSog.get(i)
+                        .select(".item-download")
+                        .first().select("a").first().attr("href");
+                //thumbnail
+
+
+                Log.d(TAG, "parseTopVN " + "\n"
+                        + "number " + number + "\n"
+                        + "name " + name + "\n"
+                        + "author " + author + "\n"
+                        + "link " + link + "\n");
+                mListMusic.add(new MusicTop(number, name, author, link));
+            }
+            if (mListMusic.size() > 0) {
+                switch (type) {
+                    case MyApplication.TOP_VN:
+                        MyApplication.mListTopVN.clear();
+                        MyApplication.mListTopVN.addAll(mListMusic);
+                        parseTop(URL_TOP_UK, MyApplication.TOP_US);
+                        break;
+                    case MyApplication.TOP_US:
+                        MyApplication.mListTopUS.clear();
+                        MyApplication.mListTopUS.addAll(mListMusic);
+                        parseTop(URL_TOP_POP, MyApplication.TOP_POP);
+                        break;
+                    case MyApplication.TOP_POP:
+                        MyApplication.mListTopPop.clear();
+                        MyApplication.mListTopPop.addAll(mListMusic);
+                        isFinish = true;
+                        break;
+                    default:
+                }
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -181,9 +251,7 @@ public class HtmlParse extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         parseAlbum(URL_ALBUM);
-
-//        parseMusic(URL_MUSIC);
-//        parseVideo(URL_VIDEO);
+        parseTop(URL_TOP_VN, MyApplication.TOP_VN);
         publishProgress();
         return null;
     }

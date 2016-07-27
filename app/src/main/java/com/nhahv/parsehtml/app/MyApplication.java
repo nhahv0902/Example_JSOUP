@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.nhahv.parsehtml.realm.Album;
 import com.nhahv.parsehtml.realm.Music;
+import com.nhahv.parsehtml.realm.MusicTop;
 import com.nhahv.parsehtml.realm.RealmController;
 import com.nhahv.parsehtml.realm.Video;
 
@@ -19,9 +20,22 @@ import io.realm.RealmConfiguration;
  */
 public class MyApplication extends Application {
 
+    public static final String KEY_TOP = "KEY_TOP";
+    public static final String MUSIC_ACTIVITY = "MUSIC_ACTIVITY";
+
     public static List<Album> mListAlbum = new ArrayList<>();
     public static List<Music> mListMusic = new ArrayList<>();
     public static List<Video> mListVideo = new ArrayList<>();
+    public static List<MusicTop> mListTopVN = new ArrayList<>();
+    public static List<MusicTop> mListTopUS = new ArrayList<>();
+    public static List<MusicTop> mListTopPop = new ArrayList<>();
+
+    public static final int TOP_VN = 111;
+    public static final int TOP_US = 222;
+    public static final int TOP_POP = 333;
+    public static int TOP = TOP_VN;
+
+
     public static RealmController mRealm;
 
     @Override
