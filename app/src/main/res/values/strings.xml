@@ -18,8 +18,13 @@
     <string name="us_uk">US-UK</string>
     <string name="k_pop">K-Pop</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="number">1</string>
     <string name="downloads">Downloads</string>
+    <string name="time">00:00</string>
+
+    <string-array name="tab_layout">
+        <item>Bài hát</item>
+        <item>Album</item>
+        <item>Video</item>
+    </string-array>
 </resources>

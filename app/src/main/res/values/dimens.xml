@@ -15,4 +15,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="size_100">100dp</dimen>
     <dimen name="size_5">5dp</dimen>
+    <dimen name="size_6">6dp</dimen>
 </resources>

@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -19,34 +20,34 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.nhahv.parsehtml.R;
-import com.nhahv.parsehtml.app.MyApplication;
 import com.nhahv.parsehtml.fragments.AlbumFragment;
 import com.nhahv.parsehtml.fragments.MusicFragment;
-import com.nhahv.parsehtml.fragments.TopFragment;
 import com.nhahv.parsehtml.fragments.VideoFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int SIZE_TAB = 3;
     private final String TAG = getClass().getSimpleName();
     private int mPosition;
+    private int[] iconTab;
+    private String[] titleTab;
 
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        titleTab = getResources().getStringArray(R.array.tab_layout);
+        iconTab = new int[]{
+                R.drawable.ic_queue_music_white_48dp,
+                R.drawable.ic_album_white_48dp,
+                R.drawable.ic_music_video_white_48dp};
         initViews();
-
-//        List<Video> videos = MyApplication.mRealm.getListVideo();
-//        for (Video video : videos) {
-//            Log.d(TAG, video.getName());
-//        }
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,12 +70,30 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        startFragment(new AlbumFragment());
+//        startFragment(new AlbumFragment());
         mPosition = 0;
     }
 
     private void initViews() {
-        
+
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(new AlbumFragment());
+        fragments.add(new MusicFragment());
+        fragments.add(new VideoFragment());
+
+        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.view_pager);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter
+                (getSupportFragmentManager(), fragments, titleTab);
+
+        mViewPager.setAdapter(adapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+
+        for (int i = 0; i < SIZE_TAB; i++) {
+            mTabLayout.getTabAt(i).setIcon(iconTab[i]);
+        }
+
     }
 
     @Override
@@ -110,35 +129,35 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        Fragment fragment;
-        switch (id) {
-            case R.id.nav_home:
-                fragment = new AlbumFragment();
-                break;
-            case R.id.nav_music:
-                fragment = new MusicFragment();
-                break;
-            case R.id.nav_album:
-                fragment = new AlbumFragment();
-                break;
-            case R.id.nav_video:
-                fragment = new VideoFragment();
-                break;
-            case R.id.nav_vi:
-                fragment = TopFragment.getInstances(MyApplication.TOP_VN);
-                break;
-            case R.id.nav_us_uk:
-                fragment = TopFragment.getInstances(MyApplication.TOP_US);
-                break;
-            case R.id.nav_k_pop:
-                fragment = TopFragment.getInstances(MyApplication.TOP_POP);
-                break;
-            default:
-                fragment = new AlbumFragment();
-                break;
-        }
-
-        startFragment(fragment);
+//        Fragment fragment;
+//        switch (id) {
+//            case R.id.nav_home:
+//                fragment = new AlbumFragment();
+//                break;
+//            case R.id.nav_music:
+//                fragment = new MusicFragment();
+//                break;
+//            case R.id.nav_album:
+//                fragment = new AlbumFragment();
+//                break;
+//            case R.id.nav_video:
+//                fragment = new VideoFragment();
+//                break;
+//            case R.id.nav_vi:
+//                fragment = TopFragment.getInstances(MyApplication.TOP_VN);
+//                break;
+//            case R.id.nav_us_uk:
+//                fragment = TopFragment.getInstances(MyApplication.TOP_US);
+//                break;
+//            case R.id.nav_k_pop:
+//                fragment = TopFragment.getInstances(MyApplication.TOP_POP);
+//                break;
+//            default:
+//                fragment = new AlbumFragment();
+//                break;
+//        }
+//
+//        startFragment(fragment);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -150,5 +169,27 @@ public class MainActivity extends AppCompatActivity
         ft.replace(R.id.content_main, fragment);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.commit();
+    }
+
+    private class ViewPagerAdapter extends FragmentPagerAdapter {
+
+        private List<Fragment> mListFragment;
+        private String[] mTitle;
+
+        public ViewPagerAdapter(FragmentManager fm, List<Fragment> fragments, String[] titles) {
+            super(fm);
+            mListFragment = fragments;
+            mTitle = titles;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mListFragment.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mListFragment.size();
+        }
     }
 }
