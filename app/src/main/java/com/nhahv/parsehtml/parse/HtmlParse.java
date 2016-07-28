@@ -30,6 +30,7 @@ public class HtmlParse extends AsyncTask<Void, Void, Void> {
     private static final String URL_TOP_VN = "http://tainhacmp3.net/album/Top100-Nhac-Tre/ZWZB969E";
     private static final String URL_TOP_UK = "http://tainhacmp3.net/album/Top100-Pop/ZWZB96AB";
     private static final String URL_TOP_POP = "http://tainhacmp3.net/album/Top100-Han-Quoc/ZWZB96DC";
+
     private final String TAG = getClass().getSimpleName();
     public static boolean isFinish = false;
 
@@ -247,6 +248,8 @@ public class HtmlParse extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
     }
+
+
 
     @Override
     protected Void doInBackground(Void... voids) {

@@ -1,12 +1,12 @@
 package com.nhahv.parsehtml.realm;
 
-import io.realm.RealmObject;
+import java.io.Serializable;
 
 /**
  * Created by Nhahv on 7/27/2016.
  * <></>
  */
-public class Album  extends RealmObject {
+public class Album  implements Serializable{
 
     private String name;
     private String author;

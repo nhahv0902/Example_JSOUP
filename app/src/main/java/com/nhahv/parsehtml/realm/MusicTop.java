@@ -5,6 +5,7 @@ package com.nhahv.parsehtml.realm;
  * <.
  */
 public class MusicTop {
+
     private String number;
     private String name;
     private String author;

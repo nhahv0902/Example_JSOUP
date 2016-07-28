@@ -16,4 +16,5 @@
     <dimen name="size_100">100dp</dimen>
     <dimen name="size_5">5dp</dimen>
     <dimen name="size_6">6dp</dimen>
+    <dimen name="size_48">48dp</dimen>
 </resources>

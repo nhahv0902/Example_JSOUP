@@ -22,7 +22,7 @@ import com.nhahv.parsehtml.realm.MusicTop;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicActivity extends AppCompatActivity
+public class AlbumActivity extends AppCompatActivity
         implements AdapterView.OnItemClickListener, Runnable {
 
     private static final String TAG = "MusicActivity";
@@ -34,7 +34,7 @@ public class MusicActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_music);
+        setContentView(R.layout.activity_album);
 
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -52,16 +52,16 @@ public class MusicActivity extends AppCompatActivity
             }
         };
 
-        intData();
+        initData();
         initViews();
     }
 
-    private void intData() {
+    private void initData() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             Music music = (Music) bundle.getSerializable(MyApplication.MUSIC_ACTIVITY);
             if (music != null) {
-                new ParseHtmlRunTime().execute(new ItemType(MyApplication.MUSIC, music.getLink()));
+                new ParseHtmlRunTime().execute(new ItemType(1, music.getLink()));
                 new Thread(this).start();
 
                 Log.d(TAG, music.getLink());
@@ -76,6 +76,7 @@ public class MusicActivity extends AppCompatActivity
         MusicTopAdapter adapter = new MusicTopAdapter(this, R.layout.item_music_top, mListMusic);
         listView.setAdapter(adapter);
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

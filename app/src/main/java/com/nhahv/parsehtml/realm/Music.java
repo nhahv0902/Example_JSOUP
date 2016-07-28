@@ -2,13 +2,11 @@ package com.nhahv.parsehtml.realm;
 
 import java.io.Serializable;
 
-import io.realm.RealmObject;
-
 /**
  * Created by Nhahv on 7/27/2016.
  * <></>
  */
-public class Music extends RealmObject  implements Serializable{
+public class Music  implements Serializable{
 
     private String name;
     private String author;

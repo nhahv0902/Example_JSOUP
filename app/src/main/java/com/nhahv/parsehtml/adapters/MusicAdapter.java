@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nhahv.parsehtml.R;
 import com.nhahv.parsehtml.realm.Music;
@@ -64,12 +63,12 @@ public class MusicAdapter extends ArrayAdapter<Music> {
                 viewHolder.textLike.setVisibility(View.INVISIBLE);
             }
 
-            viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(mContext, "" + intPosition, Toast.LENGTH_SHORT).show();
-                }
-            });
+//            viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Toast.makeText(mContext, "" + intPosition, Toast.LENGTH_SHORT).show();
+//                }
+//            });
         }
         return convertView;
     }

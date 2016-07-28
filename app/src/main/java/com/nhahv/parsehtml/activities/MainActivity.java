@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.nhahv.parsehtml.R;
 import com.nhahv.parsehtml.fragments.AlbumFragment;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = getClass().getSimpleName();
     private int mPosition;
     private int[] iconTab;
+    private int[] iconTabSelect;
     private String[] titleTab;
 
 
@@ -44,6 +46,10 @@ public class MainActivity extends AppCompatActivity
 
         titleTab = getResources().getStringArray(R.array.tab_layout);
         iconTab = new int[]{
+                R.drawable.ic_queue_music_un_select,
+                R.drawable.ic_album_un_select,
+                R.drawable.ic_music_video_un_select};
+        iconTabSelect = new int[]{
                 R.drawable.ic_queue_music_white_48dp,
                 R.drawable.ic_album_white_48dp,
                 R.drawable.ic_music_video_white_48dp};
@@ -77,11 +83,11 @@ public class MainActivity extends AppCompatActivity
     private void initViews() {
 
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new AlbumFragment());
         fragments.add(new MusicFragment());
+        fragments.add(new AlbumFragment());
         fragments.add(new VideoFragment());
 
-        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final TabLayout mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         ViewPager mViewPager = (ViewPager) findViewById(R.id.view_pager);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter
@@ -93,6 +99,27 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < SIZE_TAB; i++) {
             mTabLayout.getTabAt(i).setIcon(iconTab[i]);
         }
+
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                mTabLayout.getTabAt(position).setIcon(iconTabSelect[position]);
+                setTitle(titleTab[position]);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                mTabLayout.getTabAt(position).setIcon(iconTab[position]);
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
     }
 
@@ -117,6 +144,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_search) {
+            Toast.makeText(MainActivity.this, "Search", Toast.LENGTH_SHORT).show();
             return true;
         }
 
