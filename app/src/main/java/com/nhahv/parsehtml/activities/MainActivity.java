@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -21,8 +20,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.nhahv.parsehtml.R;
+import com.nhahv.parsehtml.app.MyApplication;
 import com.nhahv.parsehtml.fragments.AlbumFragment;
 import com.nhahv.parsehtml.fragments.MusicFragment;
+import com.nhahv.parsehtml.fragments.TopFragment;
 import com.nhahv.parsehtml.fragments.VideoFragment;
 
 import java.util.ArrayList;
@@ -34,9 +35,15 @@ public class MainActivity extends AppCompatActivity
     private static final int SIZE_TAB = 3;
     private final String TAG = getClass().getSimpleName();
     private int mPosition;
+
     private int[] iconTab;
     private int[] iconTabSelect;
-    private String[] titleTab;
+    private String[] titleTabIcon;
+    private String[] titleTabTitle;
+    private boolean isViewPagerIcon;
+
+    private TabLayout mTabLayout, mTabLayoutTitle;
+    private ViewPager mViewPager, mViewPagerTitle;
 
 
     @Override
@@ -44,11 +51,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        titleTab = getResources().getStringArray(R.array.tab_layout);
+        titleTabIcon = getResources().getStringArray(R.array.tab_layout);
+        titleTabTitle = getResources().getStringArray(R.array.title_tab);
         iconTab = new int[]{
                 R.drawable.ic_queue_music_un_select,
                 R.drawable.ic_album_un_select,
                 R.drawable.ic_music_video_un_select};
+
         iconTabSelect = new int[]{
                 R.drawable.ic_queue_music_white_48dp,
                 R.drawable.ic_album_white_48dp,
@@ -82,19 +91,43 @@ public class MainActivity extends AppCompatActivity
 
     private void initViews() {
 
-        List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new MusicFragment());
-        fragments.add(new AlbumFragment());
-        fragments.add(new VideoFragment());
+        List<Fragment> mListFragmentIcon = new ArrayList<>();
+        mListFragmentIcon.add(new MusicFragment());
+        mListFragmentIcon.add(new AlbumFragment());
+        mListFragmentIcon.add(new VideoFragment());
 
-        final TabLayout mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        List<Fragment> mListFragmentTitle = new ArrayList<>();
+        mListFragmentTitle.add(TopFragment.getInstances(MyApplication.TOP_VN));
+        mListFragmentTitle.add(TopFragment.getInstances(MyApplication.TOP_US));
+        mListFragmentTitle.add(TopFragment.getInstances(MyApplication.TOP_POP));
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter
-                (getSupportFragmentManager(), fragments, titleTab);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout_icon);
+        mViewPager = (ViewPager) findViewById(R.id.view_pager_icon);
 
-        mViewPager.setAdapter(adapter);
+        mTabLayoutTitle = (TabLayout) findViewById(R.id.tab_layout_title);
+        mViewPagerTitle = (ViewPager) findViewById(R.id.view_pager_title);
+
+
+        ViewIconPagerAdapter mIconAdapter = new ViewIconPagerAdapter
+                (getSupportFragmentManager(), mListFragmentIcon, titleTabIcon);
+
+        ViewTitlePagerAdapter mTitleAdapter;
+        mTitleAdapter = new ViewTitlePagerAdapter
+                (getSupportFragmentManager(), mListFragmentTitle, titleTabTitle);
+
+        mViewPager.setAdapter(mIconAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        mViewPagerTitle.setAdapter(mTitleAdapter);
+        mTabLayoutTitle.setupWithViewPager(mViewPagerTitle);
+
+        mViewPager.setVisibility(View.VISIBLE);
+        mTabLayout.setVisibility(View.VISIBLE);
+
+        mViewPagerTitle.setVisibility(View.GONE);
+        mTabLayoutTitle.setVisibility(View.GONE);
+
+        isViewPagerIcon = true;
 
         for (int i = 0; i < SIZE_TAB; i++) {
             mTabLayout.getTabAt(i).setIcon(iconTab[i]);
@@ -105,22 +138,19 @@ public class MainActivity extends AppCompatActivity
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 mTabLayout.getTabAt(position).setIcon(iconTabSelect[position]);
-                setTitle(titleTab[position]);
+                setTitle(titleTabIcon[position]);
+                mViewPager.setCurrentItem(position);
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                mTabLayout.getTabAt(position).setIcon(iconTab[position]);
-
+                mTabLayout.getTabAt(tab.getPosition()).setIcon(iconTab[tab.getPosition()]);
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
-
     }
 
     @Override
@@ -154,57 +184,97 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-//        Fragment fragment;
-//        switch (id) {
-//            case R.id.nav_home:
-//                fragment = new AlbumFragment();
-//                break;
-//            case R.id.nav_music:
-//                fragment = new MusicFragment();
-//                break;
-//            case R.id.nav_album:
-//                fragment = new AlbumFragment();
-//                break;
-//            case R.id.nav_video:
-//                fragment = new VideoFragment();
-//                break;
-//            case R.id.nav_vi:
-//                fragment = TopFragment.getInstances(MyApplication.TOP_VN);
-//                break;
-//            case R.id.nav_us_uk:
-//                fragment = TopFragment.getInstances(MyApplication.TOP_US);
-//                break;
-//            case R.id.nav_k_pop:
-//                fragment = TopFragment.getInstances(MyApplication.TOP_POP);
-//                break;
-//            default:
-//                fragment = new AlbumFragment();
-//                break;
-//        }
-//
-//        startFragment(fragment);
+        switch (id) {
+            case R.id.nav_home:
+                mViewPager.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.VISIBLE);
+
+                mViewPagerTitle.setVisibility(View.GONE);
+                mTabLayoutTitle.setVisibility(View.GONE);
+                mViewPager.setCurrentItem(1);
+                isViewPagerIcon = true;
+                break;
+            case R.id.nav_music:
+
+                mViewPager.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.VISIBLE);
+
+                mViewPagerTitle.setVisibility(View.GONE);
+                mTabLayoutTitle.setVisibility(View.GONE);
+
+                mViewPager.setCurrentItem(0);
+                isViewPagerIcon = true;
+                break;
+            case R.id.nav_album:
+
+                mViewPager.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.VISIBLE);
+
+                mViewPagerTitle.setVisibility(View.GONE);
+                mTabLayoutTitle.setVisibility(View.GONE);
+                mViewPager.setCurrentItem(1);
+                isViewPagerIcon = true;
+                break;
+            case R.id.nav_video:
+
+                mViewPager.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.VISIBLE);
+
+                mViewPagerTitle.setVisibility(View.GONE);
+                mTabLayoutTitle.setVisibility(View.GONE);
+                mViewPager.setCurrentItem(2);
+                isViewPagerIcon = true;
+                break;
+            case R.id.nav_vi:
+                setTitle(getString(R.string.charts));
+
+                mViewPager.setVisibility(View.GONE);
+                mTabLayout.setVisibility(View.GONE);
+
+                mViewPagerTitle.setVisibility(View.VISIBLE);
+                mTabLayoutTitle.setVisibility(View.VISIBLE);
+                mViewPagerTitle.setCurrentItem(0);
+                isViewPagerIcon = false;
+                break;
+            case R.id.nav_us_uk:
+                setTitle(getString(R.string.charts));
+                mViewPager.setVisibility(View.GONE);
+                mTabLayout.setVisibility(View.GONE);
+
+                mViewPagerTitle.setVisibility(View.VISIBLE);
+                mTabLayoutTitle.setVisibility(View.VISIBLE);
+
+                mViewPagerTitle.setCurrentItem(1);
+                isViewPagerIcon = false;
+                break;
+            case R.id.nav_k_pop:
+                setTitle(getString(R.string.charts));
+                mViewPager.setVisibility(View.GONE);
+                mTabLayout.setVisibility(View.GONE);
+
+                mViewPagerTitle.setVisibility(View.VISIBLE);
+                mTabLayoutTitle.setVisibility(View.VISIBLE);
+                mViewPagerTitle.setCurrentItem(2);
+
+                isViewPagerIcon = false;
+                break;
+            default:
+                break;
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void startFragment(Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.replace(R.id.content_main, fragment);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.commit();
-    }
-
-    private class ViewPagerAdapter extends FragmentPagerAdapter {
+    private class ViewIconPagerAdapter extends FragmentPagerAdapter {
 
         private List<Fragment> mListFragment;
         private String[] mTitle;
 
-        public ViewPagerAdapter(FragmentManager fm, List<Fragment> fragments, String[] titles) {
+        public ViewIconPagerAdapter(FragmentManager fm, List<Fragment> fragments, String[] titles) {
             super(fm);
             mListFragment = fragments;
             mTitle = titles;
@@ -218,6 +288,33 @@ public class MainActivity extends AppCompatActivity
         @Override
         public int getCount() {
             return mListFragment.size();
+        }
+    }
+
+    private class ViewTitlePagerAdapter extends FragmentPagerAdapter {
+
+        private List<Fragment> mListFragment;
+        private String[] mTitle;
+
+        public ViewTitlePagerAdapter(FragmentManager fm, List<Fragment> fragments, String[] titles) {
+            super(fm);
+            mListFragment = fragments;
+            mTitle = titles;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mListFragment.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mListFragment.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTitle[position];
         }
     }
 }

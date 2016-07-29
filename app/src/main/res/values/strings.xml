@@ -27,4 +27,10 @@
         <item>Album</item>
         <item>Video</item>
     </string-array>
+
+    <string-array name="title_tab">
+        <item>@string/vietnam</item>
+        <item>@string/us_uk</item>
+        <item>@string/k_pop</item>
+    </string-array>
 </resources>
