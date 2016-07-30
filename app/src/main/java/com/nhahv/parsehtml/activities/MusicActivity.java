@@ -15,6 +15,7 @@ import com.nhahv.parsehtml.R;
 import com.nhahv.parsehtml.adapters.MusicTopAdapter;
 import com.nhahv.parsehtml.app.MyApplication;
 import com.nhahv.parsehtml.parse.ParseHtmlRunTime;
+import com.nhahv.parsehtml.realm.ItemMusic;
 import com.nhahv.parsehtml.realm.ItemType;
 import com.nhahv.parsehtml.realm.Music;
 import com.nhahv.parsehtml.realm.MusicTop;
@@ -28,8 +29,9 @@ public class MusicActivity extends AppCompatActivity
     private static final String TAG = "MusicActivity";
     private static final int HTML_PARSE = 666;
     private List<MusicTop> mListMusic = new ArrayList<>();
+    private ItemMusic mMusic = new ItemMusic();
     private Handler mHandler;
-
+    private MusicTopAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,9 @@ public class MusicActivity extends AppCompatActivity
                         findViewById(R.id.list_view_music).setEnabled(true);
                         findViewById(R.id.list_view_music).setClickable(true);
                         ParseHtmlRunTime.isFinish = false;
+
+                        mMusic = MyApplication.itemMusic;
+                        mAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -63,7 +68,6 @@ public class MusicActivity extends AppCompatActivity
             if (music != null) {
                 new ParseHtmlRunTime().execute(new ItemType(MyApplication.MUSIC, music.getLink()));
                 new Thread(this).start();
-
                 Log.d(TAG, music.getLink());
             }
         }
@@ -73,8 +77,8 @@ public class MusicActivity extends AppCompatActivity
 
         mListMusic.addAll(MyApplication.mListAlbumMusic);
         ListView listView = (ListView) findViewById(R.id.list_view_music);
-        MusicTopAdapter adapter = new MusicTopAdapter(this, R.layout.item_music_top, mListMusic);
-        listView.setAdapter(adapter);
+        mAdapter = new MusicTopAdapter(this, R.layout.item_music_top, mListMusic);
+        listView.setAdapter(mAdapter);
     }
 
     @Override

@@ -21,12 +21,10 @@ import java.util.List;
 public class MusicTopAdapter extends ArrayAdapter<MusicTop> {
     private Context mContext;
     private List<MusicTop> mListMusicTop;
-    private int mLayout;
 
     public MusicTopAdapter(Context context, int resource, List<MusicTop> objects) {
         super(context, resource, objects);
         mContext = context;
-        mLayout = resource;
         mListMusicTop = objects;
     }
 
@@ -35,7 +33,9 @@ public class MusicTopAdapter extends ArrayAdapter<MusicTop> {
         ViewHolder viewHolder;
         if (convertView == null) {
 
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_music_top, parent, false);
+            convertView = LayoutInflater
+                    .from(mContext)
+                    .inflate(R.layout.item_music_top, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {

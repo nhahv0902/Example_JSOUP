@@ -121,11 +121,7 @@ public class MainActivity extends AppCompatActivity
         mViewPagerTitle.setAdapter(mTitleAdapter);
         mTabLayoutTitle.setupWithViewPager(mViewPagerTitle);
 
-        mViewPager.setVisibility(View.VISIBLE);
-        mTabLayout.setVisibility(View.VISIBLE);
-
-        mViewPagerTitle.setVisibility(View.GONE);
-        mTabLayoutTitle.setVisibility(View.GONE);
+        visibilityTabLayoutIcon();
 
         isViewPagerIcon = true;
 
@@ -188,76 +184,45 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_home:
-                mViewPager.setVisibility(View.VISIBLE);
-                mTabLayout.setVisibility(View.VISIBLE);
-
-                mViewPagerTitle.setVisibility(View.GONE);
-                mTabLayoutTitle.setVisibility(View.GONE);
+                visibilityTabLayoutIcon();
                 mViewPager.setCurrentItem(1);
                 isViewPagerIcon = true;
                 break;
             case R.id.nav_music:
 
-                mViewPager.setVisibility(View.VISIBLE);
-                mTabLayout.setVisibility(View.VISIBLE);
-
-                mViewPagerTitle.setVisibility(View.GONE);
-                mTabLayoutTitle.setVisibility(View.GONE);
-
+                visibilityTabLayoutIcon();
                 mViewPager.setCurrentItem(0);
                 isViewPagerIcon = true;
                 break;
             case R.id.nav_album:
 
-                mViewPager.setVisibility(View.VISIBLE);
-                mTabLayout.setVisibility(View.VISIBLE);
-
-                mViewPagerTitle.setVisibility(View.GONE);
-                mTabLayoutTitle.setVisibility(View.GONE);
+                visibilityTabLayoutIcon();
                 mViewPager.setCurrentItem(1);
                 isViewPagerIcon = true;
                 break;
             case R.id.nav_video:
 
-                mViewPager.setVisibility(View.VISIBLE);
-                mTabLayout.setVisibility(View.VISIBLE);
-
-                mViewPagerTitle.setVisibility(View.GONE);
-                mTabLayoutTitle.setVisibility(View.GONE);
+                visibilityTabLayoutIcon();
                 mViewPager.setCurrentItem(2);
                 isViewPagerIcon = true;
                 break;
             case R.id.nav_vi:
                 setTitle(getString(R.string.charts));
 
-                mViewPager.setVisibility(View.GONE);
-                mTabLayout.setVisibility(View.GONE);
-
-                mViewPagerTitle.setVisibility(View.VISIBLE);
-                mTabLayoutTitle.setVisibility(View.VISIBLE);
+                visibilityTabLayoutTitle();
                 mViewPagerTitle.setCurrentItem(0);
                 isViewPagerIcon = false;
                 break;
             case R.id.nav_us_uk:
                 setTitle(getString(R.string.charts));
-                mViewPager.setVisibility(View.GONE);
-                mTabLayout.setVisibility(View.GONE);
-
-                mViewPagerTitle.setVisibility(View.VISIBLE);
-                mTabLayoutTitle.setVisibility(View.VISIBLE);
-
+                visibilityTabLayoutTitle();
                 mViewPagerTitle.setCurrentItem(1);
                 isViewPagerIcon = false;
                 break;
             case R.id.nav_k_pop:
                 setTitle(getString(R.string.charts));
-                mViewPager.setVisibility(View.GONE);
-                mTabLayout.setVisibility(View.GONE);
-
-                mViewPagerTitle.setVisibility(View.VISIBLE);
-                mTabLayoutTitle.setVisibility(View.VISIBLE);
+                visibilityTabLayoutTitle();
                 mViewPagerTitle.setCurrentItem(2);
-
                 isViewPagerIcon = false;
                 break;
             default:
@@ -267,6 +232,22 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void visibilityTabLayoutTitle() {
+        mViewPager.setVisibility(View.GONE);
+        mTabLayout.setVisibility(View.GONE);
+
+        mViewPagerTitle.setVisibility(View.VISIBLE);
+        mTabLayoutTitle.setVisibility(View.VISIBLE);
+    }
+
+    private void visibilityTabLayoutIcon() {
+        mViewPager.setVisibility(View.VISIBLE);
+        mTabLayout.setVisibility(View.VISIBLE);
+
+        mViewPagerTitle.setVisibility(View.GONE);
+        mTabLayoutTitle.setVisibility(View.GONE);
     }
 
     private class ViewIconPagerAdapter extends FragmentPagerAdapter {

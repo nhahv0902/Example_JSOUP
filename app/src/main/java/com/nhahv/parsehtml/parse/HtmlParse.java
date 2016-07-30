@@ -34,7 +34,7 @@ public class HtmlParse extends AsyncTask<Void, Void, Void> {
     private final String TAG = getClass().getSimpleName();
     public static boolean isFinish = false;
 
-    public void parseAlbum(String textSearch) {
+    private void parseAlbum(String textSearch) {
         List<Album> mListAlbum = new ArrayList<>();
         try {
             Document dom = Jsoup.connect(textSearch).followRedirects(true).get();
@@ -85,7 +85,7 @@ public class HtmlParse extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    public void parseMusic(String textSearch) {
+    private void parseMusic(String textSearch) {
         List<Music> mListMusic = new ArrayList<>();
         try {
             Document dom = Jsoup.connect(textSearch).followRedirects(true).get();
@@ -130,7 +130,7 @@ public class HtmlParse extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    public void parseVideo(String textSearch) {
+    private void parseVideo(String textSearch) {
         List<Video> mListVideo = new ArrayList<>();
         try {
             Document dom = Jsoup.connect(textSearch).followRedirects(true).get();
@@ -182,7 +182,7 @@ public class HtmlParse extends AsyncTask<Void, Void, Void> {
         }
     }
 
-    public void parseTop(String textSearch, int type) {
+    private void parseTop(String textSearch, int type) {
         List<MusicTop> mListMusic = new ArrayList<>();
         try {
             Document dom = Jsoup.connect(textSearch).followRedirects(true).get();
@@ -250,11 +250,10 @@ public class HtmlParse extends AsyncTask<Void, Void, Void> {
     }
 
 
-
     @Override
     protected Void doInBackground(Void... voids) {
         parseAlbum(URL_ALBUM);
-        parseTop(URL_TOP_VN, MyApplication.TOP_VN);
+//        parseTop(URL_TOP_VN, MyApplication.TOP_VN);
         publishProgress();
         return null;
     }
